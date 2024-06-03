@@ -1,9 +1,19 @@
+*{
+    margin: 0;
+}
 .navbar{
     display: flex;
     justify-content: space-around;
     padding: 16px;
     box-shadow: 0 1px 3px -2px black;
 }
+.navbar a,
+.navbar a:hover,
+.navbar a:active,
+.navbar a:visited{
+    text-decoration: none;
+}
+
 .navbar-logo{
     display: flex;
     align-items: center;
@@ -19,7 +29,7 @@
     align-items: center;
     list-style: none;
     gap: 50px;
-    color: #626262;
+    color: #000;
     font-size: 20px;
     font-weight: 500;
 }
