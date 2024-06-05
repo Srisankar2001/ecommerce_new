@@ -1,5 +1,7 @@
 .item{
-    width: 350px;
+    width: 300px;
+    display: flex;
+    flex-direction: column;
 }
 .item p{
     margin: 6px 0px;
