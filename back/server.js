@@ -36,7 +36,7 @@ connectMongoDB()
 const storage = multer.diskStorage({
     destination: "./upload/images",
     filename: (req,file,cb) => {
-        return cb(null,`${file.fieldname}_${Date.now}${path.extname(file.originalname)}`)
+        return cb(null,`${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`)
     }
 })
 
@@ -81,9 +81,19 @@ const ProductSchema = new mongoose.Schema({
 })
 const Product = mongoose.model("Product",ProductSchema)
 
-app.post("/addProduct",upload.single("image"),async(req,res)=>{
+//Insert Product
+app.post("/addproduct",upload.single("image"),async(req,res)=>{
+    let products = await Product.find({})
+    let id
+    if(products.length > 0){
+        let last_product_array = products.slice(-1)
+        let last_product = last_product_array[0]
+        id = last_product.id+1
+    }else{
+        id = 1
+    }
     const product = new Product({
-        id : req.body.id,
+        id : id,
         name : req.body.name,
         category : req.body.category,
         new_price : req.body.new_price,
@@ -91,11 +101,27 @@ app.post("/addProduct",upload.single("image"),async(req,res)=>{
         avalible : req.body.avalible,
         image : req.file.filename
     })
-    console.log(product)
     await product.save()
     console.log("Saved")
     return res.json({
         success:true,
-        message:"Product Added Successfully"
+        name: req.body.name
     })
+})
+
+//Delete Product
+app.post("/removeproduct",async(req,res)=>{
+    await Product.findOneAndDelete({id:req.body.id})
+    console.log("Removed")
+    res.json({
+        success:true,
+        name: req.body.name
+    })
+})
+
+//Get All Product
+app.get("/allproducts",async(req,res)=>{
+    let products = await Product.find({})
+    console.log("All products fetched")
+    res.send(products)
 })
