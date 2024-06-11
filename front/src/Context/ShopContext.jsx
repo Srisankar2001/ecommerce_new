@@ -1,26 +1,76 @@
 import React, { createContext, useState } from "react";
-import all_product from "../Components/Assets/all_product"
+import { useEffect } from "react";
+import axios from "axios"
 
 export const ShopContext = createContext(null)
 
 const getDefaultCart = () => {
     let cart = {}
-    for(let index = 0; index< all_product.length+1; index++){
+    for(let index = 0; index< 300+1; index++){
         cart[index] = 0;
     }
     return cart
 }
 
 const ShopContextProvider = (props) => {
+    const [all_product,setAllProduct] = useState([])
     const [cartItems,setCartItems] = useState(getDefaultCart())
     
+    useEffect(async()=>{
+        const response = await axios.get("http://localhost:3001/allproducts")
+        setAllProduct(response.data)
 
-    const addToCart = (itemId) => {
+        if(localStorage.getItem("token")){
+            try{
+                const config = {
+                    headers : {
+                        token: localStorage.getItem("token")
+                    }
+                }
+                const response = await axios.post("http://localhost:3001/getcart",{},config)
+                setCartItems(response.data)
+            }catch(error){
+                alert("Error connect to server")
+            }
+        }
+    },[])
+
+    const addToCart = async(itemId) => {
         setCartItems((prev)=>({...prev,[itemId]:prev[itemId]+1}))
+        if(localStorage.getItem("token")){
+            try{
+                const config = {
+                    headers : {
+                        token: localStorage.getItem("token")
+                    }
+                }
+                const response = await axios.post("http://localhost:3001/addtocart",{itemId:itemId},config)
+                if(response.data){
+                    alert(response.data.message)
+                }
+            }catch(error){
+                alert("Error connect to server")
+            }
+        }
     }
 
-    const removeFromCart = (itemId) => {
+    const removeFromCart = async(itemId) => {
         setCartItems((prev)=>({...prev,[itemId]:prev[itemId]-1}))
+        if(localStorage.getItem("token")){
+            try{
+                const config = {
+                    headers : {
+                        token: localStorage.getItem("token")
+                    }
+                }
+                const response = await axios.post("http://localhost:3001/removefromcart",{itemId:itemId},config)
+                if(response.data){
+                    alert(response.data.message)
+                }
+            }catch(error){
+                alert("Error connect to server")
+            }
+        }
     }
 
     const getTotalCartAmount = () => {
@@ -43,7 +93,7 @@ const ShopContextProvider = (props) => {
         }
         return total
     }
-    const contextValue = {getTotalCartItem,getTotalCartAmount,all_product,cartItems,addToCart,removeFromCart}
+    const contextValue = {getTotalCartItem,all_product,getTotalCartAmount,cartItems,addToCart,removeFromCart}
 
     return (
         <ShopContext.Provider value={contextValue}>

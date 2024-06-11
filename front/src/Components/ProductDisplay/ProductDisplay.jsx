@@ -11,13 +11,13 @@ function ProductDisplay(props) {
         <div className="productDisplay">
             <div className="productDisplay-left">
                 <div className="productDisplay-img-list">
-                    <img src={product.image} alt="" />
-                    <img src={product.image} alt="" />
-                    <img src={product.image} alt="" />
-                    <img src={product.image} alt="" />
+                    <img src={`http://localhost:3001/images/${product.image}`} alt="" />
+                    <img src={`http://localhost:3001/images/${product.image}`} alt="" />
+                    <img src={`http://localhost:3001/images/${product.image}`} alt="" />
+                    <img src={`http://localhost:3001/images/${product.image}`} alt="" />
                 </div>
                 <div className="productDisplay-img">
-                    <img className="productDisplay-main-img" src={product.image} alt="" />
+                    <img className="productDisplay-main-img" src={`http://localhost:3001/images/${product.image}`} alt="" />
                 </div>
             </div>
             <div className="productDisplay-right">

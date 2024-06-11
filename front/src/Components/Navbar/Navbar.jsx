@@ -30,7 +30,7 @@ function Navbar() {
                 <li onClick={() => { setMenu("kid") }}><Link to="/kid">Kid{menu === "kid" ? <hr /> : <></>}</Link></li>
             </ul>
             <div className="navbar-login-cart">
-                <button><Link to="/login">Login</Link></button>
+                <button><Link to="/login">{localStorage.getItem("token")? <>Logout</>:<>Login</>}</Link></button>
                 <Link to="/cart"><img src={cart} alt="Cart" /></Link>
                 <div className="navbar-count">{getTotalCartItem()}</div>
             </div>
